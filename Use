@@ -1,0 +1,40 @@
+Comando nrpe /Command nrpe
+
+command[unidades_montadas]=/usr/local/nagios/libexec/check_mountpoints -A
+
+*IMPORTANTE: verificar la ruta de los plugins, ya que en ocasiones en lugar de libexec aparece plugins.
+*IMPORTANT: validate the path of plugins, ocasinally appear libexex, in another case appear plugins.
+
+Comando/Command
+
+define command {
+       command_name                             check_nrpe_mountpoints
+       command_line                             $USER1$/check_nrpe -H $HOSTADDRESS$ -c check_mountpoints
+}
+
+Servicio/Service
+
+define service {
+        host_name                       HOSTNAME
+        service_description             Unidades Montadas
+        use                             generic-service
+        check_command                   check_nrpe!unidades_montadas
+        max_check_attempts              1
+        check_interval                  1
+        retry_interval                  1
+        check_period                    xi_timeperiod_24x7
+        notification_interval           60
+        notification_period             xi_timeperiod_24x7
+        contacts                        CONTACTOS
+        register                        1
+        }
+
+comando para probar desde el server
+Command for test from server
+
+/usr/local/nagios/libexec/check_nrpe -H IP-HOSTNAME -c unidades_montadas
+
+Comando para probar localmente
+Command for test local
+
+sh /usr/local/nagios/libexec/check_mountpoints -A
